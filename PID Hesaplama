@@ -1,0 +1,20 @@
+typedef struct {
+	float kp;   // Proportional gain
+	float ki;   // Integral gain
+	float kd;   // Derivative gain
+	float setpoint;  // Desired value
+	float prev_error; // Previous error
+	float integral; // Integral term
+} PID_Controller;
+
+PID_Controller pid;
+
+float PID_Compute(PID_Controller *pid, float measured_value)
+{
+	float error = pid->setpoint - measured_value;
+	pid->integral += error;
+	float derivative = error - pid->prev_error;
+	pid->prev_error = error;
+	float output = (pid->kp * error) + (pid->ki * pid->integral) + (pid->kd * derivative);
+	return output;
+}
